@@ -52,13 +52,13 @@ int main() {
                 dealer = 1;
                 break;
             }
-            int card_temp;
+            int Temp;
             int ended;
-            PlayingCard(me, enemy, playercard, turn, card_temp, ended);
-            while(card_temp >= 11 or card_temp == 1) {
+            PlayingCard(me, enemy, playercard, turn, Temp, ended);
+            while(Temp >= 11 or Temp == 1) {
                 ended = 0;
                 int c=0;
-                c = cValue(card_temp);
+                c = cValue(Temp);
                 for(iterator = 0; iterator < c; iterator++) {
                     if(turn == 0 and me.empty()) {
                         dealer = 0;
@@ -69,12 +69,12 @@ int main() {
                         break;
                     }
                     if(turn != 0)
-                        card_temp = enemy.front(), enemy.pop();
+                        Temp = enemy.front(), enemy.pop();
                     else
-                        card_temp = me.front(), me.pop();
+                        Temp = me.front(), me.pop();
 
-                    playercard.push(card_temp);
-                    if(card_temp == 1 or card_temp >= 11)
+                    playercard.push(Temp);
+                    if(Temp == 1 or Temp >= 11)
                         break;
                 }
                 if(dealer >= 0)
