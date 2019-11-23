@@ -40,39 +40,40 @@ int main() {
                 return 0;
             Stack[iterator] = getCardValue(input[1]);
         }
-        queue<int> A, B, H;
-        FillTurns(Stack, iterator, A, B);
+        queue<int> me, enemy, playercard;
+        FillTurns(Stack, iterator, me, enemy);
         int turn = 1, dealer = -1;
         while(true) {
-            if(turn == 0 and A.empty()) {
+            if(turn == 0 and me.empty()) {
                 dealer = 0;
                 break;
             }
-            if(turn == 1 and B.empty()) {
+            if(turn == 1 and enemy.empty()) {
                 dealer = 1;
                 break;
             }
             int card_temp;
             int ended;
-            PlayingCard(A, B, H, turn, card_temp, ended);
+            PlayingCard(me, enemy, playercard, turn, card_temp, ended);
             while(card_temp >= 11 or card_temp == 1) {
                 ended = 0;
                 int c=0;
                 c = cValue(card_temp);
                 for(iterator = 0; iterator < c; iterator++) {
-                    if(turn == 0 and A.empty()) {
+                    if(turn == 0 and me.empty()) {
                         dealer = 0;
                         break;
                     }
-                    if(turn == 1 and B.empty()) {
+                    else if(turn == 1 and enemy.empty()) {
                         dealer = 1;
                         break;
                     }
-                    if(turn == 0)
-                        card_temp = A.front(), A.pop();
+                    if(turn != 0)
+                        card_temp = enemy.front(), enemy.pop();
                     else
-                        card_temp = B.front(), B.pop();
-                    H.push(card_temp);
+                        card_temp = me.front(), me.pop();
+
+                    playercard.push(card_temp);
                     if(card_temp == 1 or card_temp >= 11)
                         break;
                 }
@@ -83,10 +84,10 @@ int main() {
             if(dealer >= 0)
                 break;
             if(ended == 0)
-                Pop(A, B, H, turn);
+                Pop(me, enemy, playercard, turn);
         }
         int decision;
-        decision = LastValue(A, B, dealer);
+        decision = LastValue(me, enemy, dealer);
         cout << 2-dealer << std::setw(3) << decision << endl;
     }
 }
