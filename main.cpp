@@ -1,53 +1,55 @@
 #include <queue>
 #include <iostream>
+#include <iomanip>
+
 using namespace std;
 
-void FillTurns(const int *card, int it, queue<int> &A, queue<int> &B);
+void FillTurns(const int *card, int iterator, queue<int> &A, queue<int> &B);
 
 void Pop(queue<int> &A, queue<int> &B, queue<int> &H, int turn);
 
-int LastValue(const queue<int> &A, const queue<int> &B, int judge);
+int LastValue(const queue<int> &A, const queue<int> &B, int dealer);
 
-int PaidValue(int card_temp);
+int cValue(int card_temp);
 
 void PlayingCard(queue<int> &A, queue<int> &B, queue<int> &H, int &turn, int &card_temp, int &ended);
 
 int getCardValue(char card) {
-    if(card == 'A'){
-        return 1;}
-    else if(card == 'T')
-        return 10;
+    if(card == 'A')
+        return 1;
     else if(card == 'J')
         return 11;
     else if(card == 'Q')
         return 12;
     else if(card == 'K')
         return 13;
+    else if(card == 'T')
+        return 10;
+
     else
         return card-'0';
 }
 
 int main() {
     char input[50];
-    int card[52];
-    int it;
+    int Stack[52], iterator;
     while(true) {
-        for(it = 0; it < 52; it++) {
+        for(iterator = 0; iterator < 52; iterator++) {
             cin>>input;
             if(input[0] == '#')
                 return 0;
-            card[it] = getCardValue(input[1]);
+            Stack[iterator] = getCardValue(input[1]);
         }
         queue<int> A, B, H;
-        FillTurns(card, it, A, B);
-        int turn = 1, judge = -1;
+        FillTurns(Stack, iterator, A, B);
+        int turn = 1, dealer = -1;
         while(true) {
             if(turn == 0 and A.empty()) {
-                judge = 0;
+                dealer = 0;
                 break;
             }
             if(turn == 1 and B.empty()) {
-                judge = 1;
+                dealer = 1;
                 break;
             }
             int card_temp;
@@ -55,15 +57,15 @@ int main() {
             PlayingCard(A, B, H, turn, card_temp, ended);
             while(card_temp >= 11 or card_temp == 1) {
                 ended = 0;
-                int paid=0;
-                paid = PaidValue(card_temp);
-                for(it = 0; it < paid; it++) {
+                int c=0;
+                c = cValue(card_temp);
+                for(iterator = 0; iterator < c; iterator++) {
                     if(turn == 0 and A.empty()) {
-                        judge = 0;
+                        dealer = 0;
                         break;
                     }
                     if(turn == 1 and B.empty()) {
-                        judge = 1;
+                        dealer = 1;
                         break;
                     }
                     if(turn == 0)
@@ -74,17 +76,18 @@ int main() {
                     if(card_temp == 1 or card_temp >= 11)
                         break;
                 }
-                if(judge >= 0)  break;
+                if(dealer >= 0)
+                    break;
                 turn = 1-turn;
             }
-            if(judge >= 0)
+            if(dealer >= 0)
                 break;
             if(ended == 0)
                 Pop(A, B, H, turn);
         }
         int decision;
-        decision = LastValue(A, B, judge);
-        printf("%d%3d\n", 2-judge,  decision);
+        decision = LastValue(A, B, dealer);
+        cout << 2-dealer << std::setw(3) << decision << endl;
     }
 }
 
@@ -98,26 +101,26 @@ void PlayingCard(queue<int> &A, queue<int> &B, queue<int> &H, int &turn, int &ca
     turn = 1-turn;
 }
 
-int PaidValue(int card_temp) {
-    int paid=0;
+int cValue(int card_temp) {
+    int c=0;
     if(card_temp == 1)
-        paid = 4;
+        c = 4;
     else if(card_temp == 11)
-        paid = 1;
+        c = 1;
     else if(card_temp == 12)
-        paid = 2;
+        c = 2;
     else if(card_temp == 13)
-        paid = 3;
-    return paid;
+        c = 3;
+    return c;
 }
 
-int LastValue(const queue<int> &A, const queue<int> &B, int judge) {
-    int a;
-    if(judge)
-        a= A.size();
+int LastValue(const queue<int> &A, const queue<int> &B, int dealer) {
+    int z;
+    if(dealer)
+        z= A.size();
     else
-        a = B.size();
-    return a;
+        z = B.size();
+    return z;
 }
 
 void Pop(queue<int> &A, queue<int> &B, queue<int> &H, int turn) {
@@ -134,11 +137,11 @@ void Pop(queue<int> &A, queue<int> &B, queue<int> &H, int turn) {
     }
 }
 
-void FillTurns(const int *card, int it, queue<int> &A, queue<int> &B) {
-    for(it = 51; it >= 0; it--) {
-        if(it%2)
-            A.push(card[it]);
+void FillTurns(const int *card, int iterator, queue<int> &A, queue<int> &B) {
+    for(iterator = 51; iterator >= 0; iterator--) {
+        if(iterator%2)
+            A.push(card[iterator]);
         else
-            B.push(card[it]);
+            B.push(card[iterator]);
     }
 }
